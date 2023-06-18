@@ -31,4 +31,4 @@ main()
   });
 
   //whitelist sc address : 0x5c89574B599Eb9e6963eaF1958F7AdEB02582F0A
-  // NFT sc address : 0x371ef7A549AEb3DDe2eB99F8c911A046537f7181
+  // NFT sc address : 0x52779B6bFd51Ea2f693A767568f6154c9Ab9BEbF
