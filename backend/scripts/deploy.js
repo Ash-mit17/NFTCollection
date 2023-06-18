@@ -13,7 +13,7 @@ async function main() {
 
 
 const whitelistContract = await hre.ethers.getContractFactory("NFT");
-const contract = await whitelistContract.deploy("https://nft-collection-sneh1999.vercel.app/api/","0x5c89574B599Eb9e6963eaF1958F7AdEB02582F0A");
+const contract = await whitelistContract.deploy("https://nft-collection-eight-alpha.vercel.app/","0x5c89574B599Eb9e6963eaF1958F7AdEB02582F0A");
 await contract.deployed();
 
     
