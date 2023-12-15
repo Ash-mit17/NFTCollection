@@ -356,7 +356,7 @@ export default function Home() {
         <div>
           <h1 className={styles.title}>Welcome to Web3 Devs!</h1>
           <div className={styles.description}>
-            It&#39;s an NFT collection for developers in Web3.
+            Mint your first nft .
           </div>
           <div className={styles.description}>
             {tokenIdsMinted}/20 have been minted
@@ -369,7 +369,7 @@ export default function Home() {
       </div>
 
       <footer className={styles.footer}>
-        Made with &#10084; by Web3 Devs
+        Made with &#10084;
       </footer>
     </div>
   );

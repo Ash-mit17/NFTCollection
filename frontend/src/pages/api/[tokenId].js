@@ -4,7 +4,7 @@ export default function handler(req, res) {
   const tokenId = req.query.tokenId;
   const imageUri = `https://raw.githubusercontent.com/Ash-mit17/NFTCollection/master/frontend/public/cryptodevs/${Number(tokenId) - 1}.svg`
 
-  const name = `Crypto Dev # ${tokenId}`;
+  const name = `Web3 Dev # ${tokenId}`;
   const description = "Web3Devs is an NFT Collection for Web3 Developers";
   const image = imageUri;
   //https://raw.githubusercontent.com/Ash-mit17/NFTCollection/master/frontend/public/cryptodevs/0.svg
