@@ -6,6 +6,7 @@ import { abi, NFT_CONTRACT_ADDRESS } from "../constants";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
+  const [checkSigner,setSigner] = useState({});
   // walletConnected keep track of whether the user's wallet is connected or not
   const [walletConnected, setWalletConnected] = useState(false);
   // presaleStarted keeps track of whether the presale has started or not
@@ -154,11 +155,7 @@ export default function Home() {
       // We compare if the _presaleEnded timestamp is less than the current time
       // which means presale has ended
       const hasEnded = _presaleEnded.lt(Math.floor(Date.now() / 1000));
-      if (hasEnded) {
-        setPresaleEnded(true);
-      } else {
-        setPresaleEnded(false);
-      }
+      setPresaleEnded(hasEnded);
       return hasEnded;
     } catch (err) {
       console.error(err);
@@ -181,6 +178,7 @@ export default function Home() {
       const _owner = await nftContract.owner();
       // We will get the signer now to extract the address of the currently connected MetaMask account
       const signer = await getProviderOrSigner(true);
+      setSigner(signer);
       // Get the address associated to the signer which is connected to  MetaMask
       const address = await signer.getAddress();
       if (address.toLowerCase() === _owner.toLowerCase()) {
@@ -229,12 +227,12 @@ export default function Home() {
     const provider = await web3ModalRef.current.connect();
     const web3Provider = new providers.Web3Provider(provider);
 
-    // If user is not connected to the Goerli network, let them know and throw an error
-    // const { chainId } = await web3Provider.getNetwork();
-    // if (chainId !== 5) {
-    //   window.alert("Change the network to Goerli");
-    //   throw new Error("Change network to Goerli");
-    // }
+    // If user is not connected to the Sepolia network, let them know and throw an error
+    const { chainId } = await web3Provider.getNetwork();
+    if (chainId !== 11155111) {
+      window.alert("Change the network to Sepolia");
+      throw new Error("Change network to Sepolia");
+    }
 
     if (needSigner) {
       const signer = web3Provider.getSigner();
@@ -243,9 +241,34 @@ export default function Home() {
     return web3Provider;
   };
 
-  // useEffects are used to react to changes in state of the website
-  // The array at the end of function call represents what state changes will trigger this effect
-  // In this case, whenever the value of `walletConnected` changes - this effect will be called
+  const onPageLoad = async () => {
+    await connectWallet();
+    await getOwner();
+
+    const _presaleStarted = checkIfPresaleStarted();
+    if (_presaleStarted) {
+      await checkIfPresaleEnded();
+    }
+
+    await getTokenIdsMinted();
+
+    // set an interval to get the number of token Ids minted every 5 seconds
+    setInterval(async function () {
+      await getTokenIdsMinted();
+    }, 5 * 1000);
+
+    // Set an interval which gets called every 5 seconds to check presale has ended
+    const presaleEndedInterval = setInterval(async function () {
+      const _presaleStarted = await checkIfPresaleStarted();
+      if (_presaleStarted) {
+        const _presaleEnded = await checkIfPresaleEnded();
+        if (_presaleEnded) {
+          clearInterval(presaleEndedInterval);
+        }
+      }
+    }, 5 * 1000);
+    
+  }
   useEffect(() => {
     // if wallet is not connected, create a new instance of Web3Modal and connect the MetaMask wallet
     if (!walletConnected) {
@@ -256,33 +279,10 @@ export default function Home() {
         providerOptions: {},
         disableInjectedProvider: false,
       });
-      connectWallet();
 
-      // Check if presale has started and ended
-      const _presaleStarted = checkIfPresaleStarted();
-      if (_presaleStarted) {
-        checkIfPresaleEnded();
-      }
-
-      getTokenIdsMinted();
-
-      // Set an interval which gets called every 5 seconds to check presale has ended
-      const presaleEndedInterval = setInterval(async function () {
-        const _presaleStarted = await checkIfPresaleStarted();
-        if (_presaleStarted) {
-          const _presaleEnded = await checkIfPresaleEnded();
-          if (_presaleEnded) {
-            clearInterval(presaleEndedInterval);
-          }
-        }
-      }, 5 * 1000);
-
-      // set an interval to get the number of token Ids minted every 5 seconds
-      setInterval(async function () {
-        await getTokenIdsMinted();
-      }, 5 * 1000);
+      onPageLoad();
     }
-  }, [walletConnected]);
+  }, [walletConnected,checkSigner]);
 
   /*
       renderButton: Returns a button based on the state of the dapp
@@ -315,7 +315,7 @@ export default function Home() {
     if (!presaleStarted) {
       return (
         <div>
-          <div className={styles.description}>Presale hasn&#39;t started!</div>
+          <div className={styles.description}>Presale hasn&#39;t started! Come back later</div>
         </div>
       );
     }
@@ -348,15 +348,15 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>Crypto Devs</title>
+        <title>Web3 Devs</title>
         <meta name="description" content="Whitelist-Dapp" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.main}>
         <div>
-          <h1 className={styles.title}>Welcome to Crypto Devs!</h1>
+          <h1 className={styles.title}>Welcome to Web3 Devs!</h1>
           <div className={styles.description}>
-            It&#39;s an NFT collection for developers in Crypto.
+            It&#39;s an NFT collection for developers in Web3.
           </div>
           <div className={styles.description}>
             {tokenIdsMinted}/20 have been minted
@@ -369,7 +369,7 @@ export default function Home() {
       </div>
 
       <footer className={styles.footer}>
-        Made with &#10084; by Crypto Devs
+        Made with &#10084; by Web3 Devs
       </footer>
     </div>
   );

@@ -7,19 +7,19 @@ async function main() {
   */
   // here we deploy the contract
 
-// 10 is the Maximum number of whitelisted addresses allowed
+  // 10 is the Maximum number of whitelisted addresses allowed
 
-// wait for the contract to deploy
+  // wait for the contract to deploy
 
 
-const whitelistContract = await hre.ethers.getContractFactory("NFT");
-const contract = await whitelistContract.deploy("https://nft-collection-eight-alpha.vercel.app/","0x5c89574B599Eb9e6963eaF1958F7AdEB02582F0A");
-await contract.deployed();
+  const whitelistContract = await hre.ethers.getContractFactory("NFT");
+  const contract = await whitelistContract.deploy("https://nft-collection-eight-alpha.vercel.app/api/", "0x5c89574B599Eb9e6963eaF1958F7AdEB02582F0A");
+  await contract.deployed();
 
-    
 
-// print the address of the deployed contract
-console.log("NFT Contract Address:", contract.address);
+
+  // print the address of the deployed contract
+  console.log("NFT Contract Address:", contract.address);
 }
 
 // Call the main function and catch if there is any error
@@ -30,5 +30,5 @@ main()
     process.exit(1);
   });
 
-  //whitelist sc address : 0x5c89574B599Eb9e6963eaF1958F7AdEB02582F0A
-  // NFT sc address : 0x52779B6bFd51Ea2f693A767568f6154c9Ab9BEbF
+//whitelist sc address : 0x5c89574B599Eb9e6963eaF1958F7AdEB02582F0A
+// NFT sc address : 0x52779B6bFd51Ea2f693A767568f6154c9Ab9BEbF
