@@ -4,9 +4,11 @@ import React, { useEffect, useRef, useState } from "react";
 import Web3Modal from "web3modal";
 import { abi, NFT_CONTRACT_ADDRESS } from "../constants";
 import styles from "../styles/Home.module.css";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Home() {
-  const [checkSigner,setSigner] = useState({});
+  const [checkSigner, setSigner] = useState({});
   // walletConnected keep track of whether the user's wallet is connected or not
   const [walletConnected, setWalletConnected] = useState(false);
   // presaleStarted keeps track of whether the presale has started or not
@@ -267,7 +269,7 @@ export default function Home() {
         }
       }
     }, 5 * 1000);
-    
+
   }
   useEffect(() => {
     // if wallet is not connected, create a new instance of Web3Modal and connect the MetaMask wallet
@@ -282,7 +284,7 @@ export default function Home() {
 
       onPageLoad();
     }
-  }, [walletConnected,checkSigner]);
+  }, [walletConnected, checkSigner, tokenIdsMinted]);
 
   /*
       renderButton: Returns a button based on the state of the dapp
@@ -345,6 +347,8 @@ export default function Home() {
     }
   };
 
+  const router = useRouter();
+
   return (
     <div>
       <Head>
@@ -362,6 +366,13 @@ export default function Home() {
             {tokenIdsMinted}/20 have been minted
           </div>
           {renderButton()}
+          <div>
+            {tokenIdsMinted > 0 && (
+              <button className={styles.button} onClick={()=> router.push(`/token/${tokenIdsMinted}`)}>
+                  View my last nft
+              </button>
+            )}
+          </div>
         </div>
         <div>
           <img className={styles.image} src="./cryptodevs/0.svg" />
@@ -371,6 +382,6 @@ export default function Home() {
       <footer className={styles.footer}>
         Made with &#10084;
       </footer>
-    </div>
+    </div >
   );
 }
