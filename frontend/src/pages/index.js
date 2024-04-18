@@ -369,7 +369,7 @@ export default function Home() {
           <div>
             {tokenIdsMinted > 0 && (
               <button className={styles.button} onClick={()=> router.push(`/token/${tokenIdsMinted}`)}>
-                  View my last nft
+                  View last nft
               </button>
             )}
           </div>
